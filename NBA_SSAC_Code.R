@@ -5,7 +5,7 @@ library(tidyr)
 library(clue)
 library(tibble)
 
-#nba_SSAC_data <- read_excel("Downloads/nba_SSAC_data.xlsx")
+# nba_SSAC_data <- read_excel("Downloads/nba_SSAC_data.xlsx")
 # Once nba_SSAC_data.xlsx is imported, the code is as follows.
 
 nba_summary <- nba_SSAC_data
@@ -28,7 +28,7 @@ match_champs_vs_finalists <- function(df,
       RAT = as.numeric(RAT),
       effort = as.numeric(avg_speed),
       performance = as.numeric(pmpm),
-      player_id = as.character(player_id)          # CHANGED: lock player_id to character
+      player_id = as.character(player_id)
     )
   
   # Robust season ordering even if "2015/16"
@@ -37,8 +37,8 @@ match_champs_vs_finalists <- function(df,
   # Compute deltas (next - current) based on SAME name+team and NEXT season only
   df <- df %>%
     mutate(season_start = season_start(season)) %>%
-    arrange(name, team, season_start, season) %>%     # CHANGED earlier: order by name+team
-    group_by(name, team) %>%                          # CHANGED earlier: group by name+team
+    arrange(name, team, season_start, season) %>%
+    group_by(name, team) %>% 
     mutate(
       next_season_start        = lead(season_start),
       delta_effort             = lead(effort)      - effort,
@@ -118,9 +118,9 @@ match_champs_vs_finalists <- function(df,
       if (nr == 0 || nc == 0) {
         return(tibble(
           season = unique(season_df$season),
-          champion_player_id = character(0),   # CHANGED: character(0) not integer(0)
+          champion_player_id = character(0), 
           champion_name = character(0),
-          finalist_player_id = character(0),   # CHANGED: character(0) not integer(0)
+          finalist_player_id = character(0), 
           finalist_name = character(0),
           cost = numeric(0)
         ))
@@ -143,7 +143,7 @@ match_champs_vs_finalists <- function(df,
       tibble(
         season               = season_df$season[1],
         
-        champion_player_id   = as.character(champs$player_id[matches$row]),  # CHANGED
+        champion_player_id   = as.character(champs$player_id[matches$row]),
         champion_name        = champs$name[matches$row],
         champion_team        = champs$team[matches$row],
         champion_pos         = champs$position[matches$row],
@@ -151,7 +151,7 @@ match_champs_vs_finalists <- function(df,
         champion_posnum      = champs$position_num[matches$row],
         champion_RAT         = champs$RAT[matches$row],
         
-        finalist_player_id   = as.character(finals$player_id[matches$col]),  # CHANGED
+        finalist_player_id   = as.character(finals$player_id[matches$col]),
         finalist_name        = finals$name[matches$col],
         finalist_team        = finals$team[matches$col],
         finalist_pos         = finals$position[matches$col],
@@ -187,7 +187,7 @@ match_champs_vs_finalists <- function(df,
 
 pairs <- match_champs_vs_finalists(
   nba_clean,
-  scale_within_season = TRUE,        # optional; affects only age/pos/RAT in the cost
+  scale_within_season = TRUE,        # standardizes age/pos/RAT in the cost
   require_all_delta_vars = TRUE      # ensures both-season data for ALL five deltas
 )
 
