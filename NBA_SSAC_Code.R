@@ -12,7 +12,7 @@ nba_summary <- nba_SSAC_data
 
 nba_summary$avg_distance_hour <- nba_summary$avg_speed
 nba_summary$avg_speed <- nba_summary$avg_distance_hour * 48 / 60 # Average distance per game
-nba_summary$pmpm <- nba_summary$total_plus_minus / (nba_summary$total_minutes / 48) # Plus-minus per game
+nba_summary$pmpg <- nba_summary$total_plus_minus / (nba_summary$total_minutes / 48) # Plus-minus per game
 
 nba_clean <- nba_summary %>%
   filter(!is.na(age), !is.na(position_num), !is.na(RAT))
@@ -28,7 +28,7 @@ match_champs_vs_finalists <- function(df,
       position_num = as.numeric(position_num),
       RAT = as.numeric(RAT),
       effort = as.numeric(avg_speed),
-      performance = as.numeric(pmpm),
+      performance = as.numeric(pmpg),
       player_id = as.character(player_id)
     )
   
@@ -193,6 +193,3 @@ t_totalpm$stderr
 
 mean(pairs$delta_effort_diff)/sd(pairs$delta_effort_diff)
 mean(pairs$delta_performance_diff)/sd(pairs$delta_performance_diff)
-
-
-
