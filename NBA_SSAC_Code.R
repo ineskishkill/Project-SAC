@@ -10,8 +10,8 @@ library(tibble)
 
 nba_summary <- nba_SSAC_data
 
-nba_summary$avg_speed_hour <- nba_summary$avg_speed
-nba_summary$avg_speed <- nba_summary$avg_speed_hour * 48 / 60 # Average speed per game
+nba_summary$avg_distance_hour <- nba_summary$avg_speed
+nba_summary$avg_speed <- nba_summary$avg_distance_hour * 48 / 60 # Average distance per game
 nba_summary$pmpm <- nba_summary$total_plus_minus / (nba_summary$total_minutes / 48) # Plus-minus per game
 
 nba_clean <- nba_summary %>%
