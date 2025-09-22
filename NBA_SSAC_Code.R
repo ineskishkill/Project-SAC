@@ -4,6 +4,8 @@ library(purrr)
 library(tidyr)
 library(clue)
 library(tibble)
+library(ggplot2)
+library(patchwork)
 
 # nba_SSAC_data <- read_excel("Downloads/nba_SSAC_data.xlsx")
 # Once nba_SSAC_data.xlsx is imported, the code is as follows.
