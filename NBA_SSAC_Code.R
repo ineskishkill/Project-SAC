@@ -16,7 +16,6 @@ nba_clean <- nba_summary %>%
   filter(!is.na(age), !is.na(position_num), !is.na(RAT))
 
 match_champs_vs_finalists <- function(df, 
-                                      seasons = NULL,
                                       scale_within_season = TRUE,
                                       bigM = 1e9,
                                       require_all_delta_vars = TRUE) {
@@ -31,13 +30,10 @@ match_champs_vs_finalists <- function(df,
       player_id = as.character(player_id)
     )
   
-  # Robust season ordering even if "2015/16"
-  season_start <- function(x) as.numeric(sub("^(\\d{4}).*$", "\\1", as.character(x)))
-  
   # Compute deltas (next - current) based on SAME name+team and NEXT season only
   df <- df %>%
-    mutate(season_start = season_start(season)) %>%
-    arrange(name, team, season_start, season) %>%
+    mutate(season_start = season) %>%
+    arrange(name, team, season_start) %>%
     group_by(name, team) %>% 
     mutate(
       next_season_start        = lead(season_start),
@@ -65,11 +61,6 @@ match_champs_vs_finalists <- function(df,
   
   # Normalize finals_result and keep needed cols (carry the deltas, not raw metrics)
   dat <- df %>%
-    mutate(finals_result = case_when(
-      tolower(finals_result) %in% c("champion","champions") ~ "Champion",
-      tolower(finals_result) %in% c("finalist","runner-up","runner up") ~ "Finalist",
-      TRUE ~ finals_result
-    )) %>%
     filter(finals_result %in% c("Champion","Finalist")) %>%
     select(
       season, name, player_id, team, position, finals_result,
@@ -78,8 +69,6 @@ match_champs_vs_finalists <- function(df,
     ) %>%
     filter(!is.na(finals_result), finals_result %in% c("Champion","Finalist"),
            !is.na(age), !is.na(position_num), !is.na(RAT))
-  
-  if (!is.null(seasons)) dat <- dat %>% filter(season %in% seasons)
   
   # Optional z-scoring for match features only
   if (scale_within_season) {
@@ -202,5 +191,4 @@ t_totalpm$stderr
 
 mean(pairs$delta_effort_diff)/sd(nba_summary$avg_speed, na.rm = TRUE)
 mean(pairs$delta_performance_diff)/sd(nba_summary$pmpm, na.rm = TRUE)
-
 
