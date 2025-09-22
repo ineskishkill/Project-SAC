@@ -193,3 +193,46 @@ t_totalpm$stderr
 
 mean(pairs$delta_effort_diff)/sd(pairs$delta_effort_diff)
 mean(pairs$delta_performance_diff)/sd(pairs$delta_performance_diff)
+
+#Plot
+eff  <- pairs$delta_effort_diff
+perf <- pairs$delta_performance_diff
+
+p_eff <- ggplot(data.frame(x = eff), aes(x)) +
+  geom_density(fill = "grey70", alpha = 0.6, color = "grey20") +
+  geom_rug(sides = "b") +
+  geom_vline(xintercept = 0, linetype = "dashed", linewidth = 0.8) +
+  labs(
+    title = "Effort (Champion − Finalist)",
+    x = "Difference (next − current, Champion − Finalist)",
+    y = "Density"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(panel.grid.minor = element_blank(),
+        plot.title = element_text(face = "bold"))
+
+p_perf <- ggplot(data.frame(x = perf), aes(x)) +
+  geom_density(fill = "grey70", alpha = 0.6, color = "grey20") +
+  geom_rug(sides = "b") +
+  geom_vline(xintercept = 0, linetype = "dashed", linewidth = 0.8) +
+  labs(
+    title = "Performance (Champion − Finalist)",
+    x = "Difference (next − current, Champion − Finalist)",
+    y = "Density"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(panel.grid.minor = element_blank(),
+        plot.title = element_text(face = "bold"))
+
+combined <-(p_eff + p_perf) +
+  plot_annotation(
+    title   = "Distributions of Champion–Finalist Differences"
+  )
+
+combined
+
+ggplot2::ggsave(
+  filename = "champion_finalist_densities.png",
+  plot     = combined,
+  width    = 12, height = 6, units = "in", dpi = 300
+)
